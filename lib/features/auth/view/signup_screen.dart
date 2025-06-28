@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../route/app_route_names.dart';
+import '../../../data_layer/model/user_profile.dart';
+import '../../../utils/snackbar_toast/snack_bar.dart';
 import 'package:note_app/features/auth/provider/auth_provider.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -16,22 +18,24 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void _submit() async {
     final vm = Provider.of<AuthProvider>(context, listen: false);
-    final success = await vm.signUp(
+
+    final user = UserProfile(
+      id: '',
       name: 'Dolon',
       email: emailController.text.trim(),
-      password: passwordController.text.trim(),
+      createdAt: DateTime.now().toUtc(),
     );
 
+    final success = await vm.signUp(user: user, password: passwordController.text.trim());
+
     if (success == "email_confirm_required") {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("📩 Please check your email and confirm.")));
+      DSnackBar.success(title: "📩 Please check your email and confirm.");
       Navigator.pushReplacementNamed(context, AppRouteNames.verifyEmail);
     } else if (success == null) {
+      DSnackBar.success(title: "✅ Account created!");
       Navigator.pushReplacementNamed(context, AppRouteNames.dashboard);
     } else {
-      final error = vm.errorMessage ?? 'Signup failed';
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));
+      DSnackBar.error(title: vm.errorMessage ?? '❌ Signup failed');
     }
   }
 
@@ -53,7 +57,6 @@ class _SignupScreenState extends State<SignupScreen> {
                   decoration: const InputDecoration(labelText: 'Password'),
                 ),
                 const SizedBox(height: 20),
-
                 vm.isLoading
                     ? const CircularProgressIndicator()
                     : ElevatedButton(onPressed: _submit, child: const Text("Create Account")),

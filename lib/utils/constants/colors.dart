@@ -24,7 +24,8 @@ class DColors {
 
   // 🧱 Container Backgrounds
   static const Color lightContainer = Color(0xFFF6F6F6);
-  static Color darkContainer = white.withOpacity(0.1);
+  static Color get darkContainer => white.withOpacity(0.1); // getter better for readability
+
 
   // 🔘 Buttons
   static const Color buttonPrimary = Color(0xff004368);

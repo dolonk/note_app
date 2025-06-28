@@ -1,13 +1,17 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import '../../utils/services/https_services/auth_service.dart';
+import '../../data_layer/data_sources/remote/auth_remote_datasource.dart';
+import '../../data_layer/domain/repositories/auth/auth_repository.dart';
+import '../../data_layer/domain/repositories/auth/auth_repository_impl.dart';
+import '../../data_layer/domain/use_cases/auth_use_case.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initDependencies() async {
-  // Supabase initialization must be called in main, not here
   sl.registerLazySingleton<SupabaseClient>(() => Supabase.instance.client);
 
-  sl.registerLazySingleton<AuthService>(() => AuthService(sl()));
+  /// Auth section
+  sl.registerLazySingleton(() => AuthRemoteData(sl()));
+  sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
+  sl.registerLazySingleton(() => AuthUseCase(sl()));
 }

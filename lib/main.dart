@@ -1,3 +1,6 @@
+import 'package:note_app/features/auth/provider/auth_provider.dart';
+import 'package:provider/provider.dart';
+
 import 'core/env/env.dart';
 import 'core/di/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -7,10 +10,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  /// Initialize Supabase using your Env class
+  // Initialize Supabase with Env values
   await Supabase.initialize(url: Env.SUPABASE_URL, anonKey: Env.SUPABASE_ANON_KEY);
 
-  /// Register dependencies
+  // Setup dependency injection
   await initDependencies();
 
   runApp(const MyApp());
@@ -21,11 +24,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(
-      title: 'Note app',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light(),
-      routerConfig: appRouter,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        // Jodi onno provider thake, ekhane add korte parbi
+      ],
+      child: MaterialApp.router(
+        title: 'Note App',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light(),
+        routerConfig: appRouter,
+      ),
     );
   }
 }

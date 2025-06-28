@@ -26,7 +26,7 @@ class UserProfile {
       'avatar': avatar,
       'role': role,
       'created_at': createdAt?.toIso8601String(),
-    }..removeWhere((key, value) => value == null); // skip null fields
+    }..removeWhere((key, value) => value == null);
   }
 
   factory UserProfile.fromMap(Map<String, dynamic> map) {
@@ -37,9 +37,7 @@ class UserProfile {
       bio: map['bio'],
       avatar: map['avatar'],
       role: map['role'],
-      createdAt: map['created_at'] != null
-          ? DateTime.parse(map['created_at'])
-          : null,
+      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
     );
   }
 }

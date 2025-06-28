@@ -60,6 +60,11 @@ class DSizes {
   static const double spaceBtwItems = 16.0;
   static const double spaceBtwSections = 32.0;
 
+  // spacing constants used
+  static const double spaceSm = 8.0;
+  static const double spaceMd = 16.0;
+  static const double spaceLg = 24.0;
+
   // 🧱 Grid View
   static const double gridViewSpacingXs = 8.0;
   static const double gridViewSpacingMd = 16.0;

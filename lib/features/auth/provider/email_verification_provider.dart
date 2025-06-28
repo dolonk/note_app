@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/di/service_locator.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../data_layer/domain/use_cases/auth_use_case.dart';
 
 class EmailVerificationProvider with ChangeNotifier {
-  final SupabaseClient _client = sl<SupabaseClient>();
+  final AuthUseCase _authUseCase = sl<AuthUseCase>();
 
   Timer? _timer;
   int _secondsLeft = 120;
@@ -36,14 +36,14 @@ class EmailVerificationProvider with ChangeNotifier {
 
     startTimer();
 
-    await _client.auth.resend(type: OtpType.email, email: email);
+    await _authUseCase.resendVerificationEmail(email);
   }
 
   Future<bool> isEmailVerified() async {
-    await _client.auth.refreshSession();
-    final user = _client.auth.currentUser;
-    return user?.emailConfirmedAt != null;
+    return _authUseCase.isEmailVerified();
   }
+
+
 
   void disposeTimer() {
     _timer?.cancel();
