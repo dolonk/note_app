@@ -7,10 +7,10 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // ✅ Initialize Supabase using your Env class
+  /// Initialize Supabase using your Env class
   await Supabase.initialize(url: Env.SUPABASE_URL, anonKey: Env.SUPABASE_ANON_KEY);
 
-  // ✅ Register dependencies
+  /// Register dependencies
   await initDependencies();
 
   runApp(const MyApp());

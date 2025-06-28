@@ -16,10 +16,19 @@ class _SignupScreenState extends State<SignupScreen> {
 
   void _submit() async {
     final vm = Provider.of<AuthProvider>(context, listen: false);
-    final success = await vm.signup(emailController.text.trim(), passwordController.text.trim());
+    final success = await vm.signUp(
+      name: 'Dolon',
+      email: emailController.text.trim(),
+      password: passwordController.text.trim(),
+    );
 
-    if (success && mounted) {
+    if (success == "email_confirm_required") {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("📩 Please check your email and confirm.")));
       Navigator.pushReplacementNamed(context, AppRouteNames.verifyEmail);
+    } else if (success == null) {
+      Navigator.pushReplacementNamed(context, AppRouteNames.dashboard);
     } else {
       final error = vm.errorMessage ?? 'Signup failed';
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error)));

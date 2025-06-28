@@ -11,25 +11,24 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
-
   # state management
   provider: ^6.1.5
 
   # database
   supabase_flutter: ^2.9.1
 
-  # dependency ingestion
-  get_it: ^8.0.3
-
+  # core dependencies
+  cupertino_icons: ^1.0.8
+  iconsax: ^0.0.8
+  get_it: ^8.0.3  # dependency ingestion
   go_router: ^15.2.4
+  connectivity_plus: ^6.1.4
 
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^5.0.0
-
 
 
 flutter:
