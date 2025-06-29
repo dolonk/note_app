@@ -1,7 +1,7 @@
-import 'package:supabase_flutter/supabase_flutter.dart';
-
 import 'auth_repository.dart';
+import 'package:flutter/material.dart';
 import '../../../model/user_profile.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data_sources/remote/auth_remote_datasource.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -56,15 +56,36 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<bool> isEmailVerified() async {
-    await Supabase.instance.client.auth.refreshSession();
-    final user = Supabase.instance.client.auth.currentUser;
-    return user?.emailConfirmedAt != null;
+  Future<bool> isEmailVerified({required String email, required String password}) async {
+    try {
+      final result = await Supabase.instance.client.auth.signInWithPassword(email: email, password: password);
+      final user = result.user;
+      return user?.emailConfirmedAt != null;
+    } catch (e) {
+      debugPrint("Login check for email verification failed: $e");
+      return false;
+    }
   }
 
   @override
-  Future<void> resendVerificationEmail(String email) {
-    return Supabase.instance.client.auth.resend(type: OtpType.email, email: email);
+  Future<void> resendVerificationEmail(String email, String password) {
+    return remoteData.signup(email: email, password: password);
+  }
+
+  @override
+  Future<bool> isUserAlreadyLoggedIn() async {
+    try {
+      final user = Supabase.instance.client.auth.currentUser;
+      if (user == null) return false;
+
+      await Supabase.instance.client.auth.refreshSession();
+      final updatedUser = Supabase.instance.client.auth.currentUser;
+
+      return updatedUser?.emailConfirmedAt != null;
+    } catch (e) {
+      debugPrint('🔁 Login check failed: $e');
+      return false;
+    }
   }
 
   @override

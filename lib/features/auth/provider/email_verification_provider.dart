@@ -1,7 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../data_layer/domain/use_cases/auth_use_case.dart';
+import '../../../data_layer/model/user_profile.dart';
+import '../../../route/app_route_names.dart';
+import '../../../utils/snackbar_toast/snack_bar.dart';
 
 class EmailVerificationProvider with ChangeNotifier {
   final AuthUseCase _authUseCase = sl<AuthUseCase>();
@@ -29,21 +33,23 @@ class EmailVerificationProvider with ChangeNotifier {
     });
   }
 
-  Future<void> resendEmail(String email) async {
+  Future<void> resendEmail({required String email, required String password}) async {
     _canResend = false;
     _secondsLeft = 120;
     notifyListeners();
 
     startTimer();
 
-    await _authUseCase.resendVerificationEmail(email);
+    await _authUseCase.resendVerificationEmail(email, password);
   }
 
-  Future<bool> isEmailVerified() async {
-    return _authUseCase.isEmailVerified();
+  Future<bool> isEmailVerified(String email, String password) async {
+    return _authUseCase.isEmailVerified(email, password);
   }
 
-
+  Future<void> saveUserProfile(UserProfile profile) async {
+    await _authUseCase.repository.saveUserProfile(profile);
+  }
 
   void disposeTimer() {
     _timer?.cancel();

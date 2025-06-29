@@ -7,9 +7,11 @@ abstract class AuthRepository {
 
   Future<String?> login({required String email, required String password});
 
-  Future<bool> isEmailVerified();
+  Future<bool> isEmailVerified({required String email, required String password});
 
-  Future<void> resendVerificationEmail(String email);
+  Future<void> resendVerificationEmail(String email, String password);
+
+  Future<bool> isUserAlreadyLoggedIn();
 
   Future<void> logout();
 

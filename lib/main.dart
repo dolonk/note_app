@@ -1,4 +1,5 @@
 import 'package:note_app/features/auth/provider/auth_provider.dart';
+import 'package:note_app/features/auth/provider/email_verification_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'core/env/env.dart';

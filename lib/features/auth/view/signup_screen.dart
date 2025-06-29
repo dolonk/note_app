@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import '../../../route/app_route_names.dart';
 import '../../../data_layer/model/user_profile.dart';
@@ -30,10 +31,13 @@ class _SignupScreenState extends State<SignupScreen> {
 
     if (success == "email_confirm_required") {
       DSnackBar.success(title: "📩 Please check your email and confirm.");
-      Navigator.pushReplacementNamed(context, AppRouteNames.verifyEmail);
+      context.pushReplacement(
+        AppRouteNames.verifyEmail,
+        extra: {'userProfile': user, 'password': passwordController.text.trim()},
+      );
     } else if (success == null) {
       DSnackBar.success(title: "✅ Account created!");
-      Navigator.pushReplacementNamed(context, AppRouteNames.dashboard);
+      context.pushReplacement(AppRouteNames.dashboard);
     } else {
       DSnackBar.error(title: vm.errorMessage ?? '❌ Signup failed');
     }

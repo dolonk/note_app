@@ -7,15 +7,7 @@ class UserProfile {
   final String? role;
   final DateTime? createdAt;
 
-  UserProfile({
-    required this.id,
-    required this.name,
-    this.email,
-    this.bio,
-    this.avatar,
-    this.role,
-    this.createdAt,
-  });
+  UserProfile({required this.id, required this.name, this.email, this.bio, this.avatar, this.role, this.createdAt});
 
   Map<String, dynamic> toMap() {
     return {
@@ -38,6 +30,26 @@ class UserProfile {
       avatar: map['avatar'],
       role: map['role'],
       createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
+    );
+  }
+
+  UserProfile copyWith({
+    String? id,
+    String? name,
+    String? email,
+    String? avatar,
+    String? bio,
+    String? role,
+    DateTime? createdAt,
+  }) {
+    return UserProfile(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      email: email ?? this.email,
+      avatar: avatar ?? this.avatar,
+      bio: bio ?? this.bio,
+      role: role ?? this.role,
+      createdAt: createdAt ?? this.createdAt,
     );
   }
 }
