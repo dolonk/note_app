@@ -26,10 +26,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        // Jodi onno provider thake, ekhane add korte parbi
-      ],
+      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
       child: MaterialApp.router(
         title: 'Note App',
         debugShowCheckedModeBanner: false,

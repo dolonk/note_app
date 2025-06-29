@@ -51,8 +51,4 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
-  Future<bool> isUserAlreadyLoggedIn() async {
-    return _authUseCase.isUserAlreadyLoggedIn();
-  }
 }

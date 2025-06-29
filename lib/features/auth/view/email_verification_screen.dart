@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import '../../../data_layer/model/user_profile.dart';
+import 'package:go_router/go_router.dart';
 import '../../../route/app_route_names.dart';
+import '../../../data_layer/model/user_profile.dart';
 import '../../../utils/snackbar_toast/snack_bar.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:note_app/features/auth/provider/email_verification_provider.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
@@ -29,18 +29,12 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
   void _pollEmailVerification() async {
     while (mounted) {
-      print("email: ${widget.userProfile.email!}");
-      print("password: ${widget.password}");
-
       final verified = await vm.isEmailVerified(widget.userProfile.email!, widget.password);
-
-      print("📩 Verified status: $verified");
-
       if (verified) {
         vm.disposeTimer();
 
+        // Save the user profile with the current user ID
         final uid = Supabase.instance.client.auth.currentUser?.id;
-
         if (uid != null) {
           final profile = widget.userProfile.copyWith(id: uid);
           await vm.saveUserProfile(profile);
@@ -84,7 +78,10 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                       ? ElevatedButton(
                         onPressed: () async {
                           try {
-                            await model.resendEmail(email: widget.userProfile.email!, password: widget.password);
+                            await model.resendEmail(
+                              email: widget.userProfile.email!,
+                              password: widget.password,
+                            );
                             DSnackBar.success(title: "📩 Verification email resent");
                           } catch (_) {
                             DSnackBar.error(title: "❌ Failed to resend");
