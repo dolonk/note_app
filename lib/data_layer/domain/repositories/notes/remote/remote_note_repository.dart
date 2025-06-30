@@ -1,6 +1,6 @@
-import '../../../model/note_model.dart';
+import '../../../../model/note_model.dart';
 
-abstract class NoteRepository {
+abstract class RemoteNoteRepository {
   Future<void> addNote(NoteModel note);
   Future<void> updateNote(NoteModel note);
   Future<List<NoteModel>> getAllNotes(String userId);

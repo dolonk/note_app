@@ -26,8 +26,8 @@ class AuthRemoteData {
   Future<void> logout() => client.auth.signOut();
 
   UserProfile? get currentUser {
-    final supaUser = client.auth.currentUser;
-    if (supaUser == null) return null;
-    return UserProfile(id: supaUser.id, name: '', email: supaUser.email ?? '');
+    final supabaseUser = client.auth.currentUser;
+    if (supabaseUser == null) return null;
+    return UserProfile(id: supabaseUser.id, name: '', email: supabaseUser.email ?? '');
   }
 }

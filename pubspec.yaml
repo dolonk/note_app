@@ -16,6 +16,7 @@ dependencies:
 
   # database
   supabase_flutter: ^2.9.1
+  sqflite: ^2.4.2
 
   # core dependencies
   cupertino_icons: ^1.0.8

@@ -1,10 +1,10 @@
 import '../../model/note_model.dart';
-import '../repositories/notes/note_repository.dart';
+import '../repositories/notes/remote/remote_note_repository.dart';
 
-class NoteUseCase {
-  final NoteRepository repository;
+class RemoteNoteUseCase {
+  final RemoteNoteRepository repository;
 
-  NoteUseCase(this.repository);
+  RemoteNoteUseCase(this.repository);
 
   Future<void> addNote(NoteModel note) => repository.addNote(note);
 

@@ -1,10 +1,10 @@
 import '../../model/note_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-class NoteRemoteDataSource {
+class RemoteNoteDataSource {
   final SupabaseClient client;
 
-  NoteRemoteDataSource(this.client);
+  RemoteNoteDataSource(this.client);
 
   Future<void> addNote(NoteModel note) async {
     await client.from('notes').insert(note.toJson());

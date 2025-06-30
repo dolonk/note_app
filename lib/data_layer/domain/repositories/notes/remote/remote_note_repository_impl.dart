@@ -1,11 +1,11 @@
-import 'note_repository.dart';
-import '../../../model/note_model.dart';
-import '../../../data_sources/remote/note_remote_datasource.dart';
+import 'remote_note_repository.dart';
+import '../../../../model/note_model.dart';
+import '../../../../data_sources/remote/note_remote_datasource.dart';
 
-class NoteRepositoryImpl implements NoteRepository {
-  final NoteRemoteDataSource remote;
+class RemoteNoteRepositoryImpl implements RemoteNoteRepository {
+  final RemoteNoteDataSource remote;
 
-  NoteRepositoryImpl(this.remote);
+  RemoteNoteRepositoryImpl(this.remote);
 
   @override
   Future<void> addNote(NoteModel note) => remote.addNote(note);

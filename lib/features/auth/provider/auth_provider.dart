@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../data_layer/model/user_profile.dart';
 import '../../../data_layer/domain/use_cases/auth_use_case.dart';
