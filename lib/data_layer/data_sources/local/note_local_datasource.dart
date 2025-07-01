@@ -37,7 +37,8 @@ class LocalNoteDataSourceImpl implements LocalNoteDataSource {
             priority TEXT,
             color INTEGER,
             reminder_date TEXT,
-            created_at TEXT
+            created_at TEXT,
+            is_synced INTEGER DEFAULT 0
           )
         ''');
       },
@@ -67,12 +68,7 @@ class LocalNoteDataSourceImpl implements LocalNoteDataSource {
   @override
   Future<NoteModel?> getNoteById(String noteId) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query(
-      'notes',
-      where: 'id = ?',
-      whereArgs: [noteId],
-      limit: 1,
-    );
+    final List<Map<String, dynamic>> maps = await db.query('notes', where: 'id = ?', whereArgs: [noteId], limit: 1);
 
     if (maps.isNotEmpty) {
       return NoteModel.fromJson(maps.first);

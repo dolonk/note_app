@@ -1,10 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../data_layer/domain/use_cases/local_note_use_case.dart';
 import '../../../data_layer/model/note_model.dart';
 import '../../../data_layer/domain/use_cases/remote_note_use_case.dart';
+import '../../../utils/enum/note_enum.dart';
+import '../../../utils/network_manager/network_manager.dart';
 
-class NoteProvider with ChangeNotifier {
+/*class NoteProvider with ChangeNotifier {
   final RemoteNoteUseCase _remoteUseCase = sl<RemoteNoteUseCase>();
   final LocalNoteUseCase _localUseCase = sl<LocalNoteUseCase>();
 
@@ -16,14 +19,40 @@ class NoteProvider with ChangeNotifier {
   bool get isLoading => _isLoading;
   String? get error => _error;
 
-  /// 🟢 Add Note: save locally first → then sync remotely
+  late StreamSubscription<bool> _connectivitySubscription;
+
+  /// 🟢 Initialize Sync Listener
+  void initializeAutoSync(String userId) {
+    _connectivitySubscription = InternetManager.instance.isConnectedStream.listen((isConnected) {
+      if (isConnected) {
+        syncUnsyncedNotes(userId);
+      }
+    });
+  }
+
+  /// 🟢 Dispose listener
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  /// 🟢 Add Note: save locally first → then try sync
   Future<void> addNote(NoteModel note) async {
     try {
-      await _localUseCase.addNote(note);
-      _notes.insert(0, note);
+      final offlineNote = note.copyWith(isSynced: false);
+      await _localUseCase.addNote(offlineNote);
+      _notes.insert(0, offlineNote);
       notifyListeners();
 
-      await _remoteUseCase.addNote(note); // try syncing
+      final isConnected = await InternetManager.instance.isConnected();
+      if (isConnected) {
+        await _remoteUseCase.addNote(offlineNote);
+        final syncedNote = offlineNote.copyWith(isSynced: true);
+        await _localUseCase.updateNote(syncedNote);
+        _notes[_notes.indexWhere((n) => n.id == note.id)] = syncedNote;
+        notifyListeners();
+      }
     } catch (e) {
       _error = "Failed to add note";
       notifyListeners();
@@ -33,12 +62,20 @@ class NoteProvider with ChangeNotifier {
   /// 🟢 Update Note
   Future<void> updateNote(NoteModel note) async {
     try {
-      await _localUseCase.updateNote(note);
+      final offlineNote = note.copyWith(isSynced: false);
+      await _localUseCase.updateNote(offlineNote);
       final index = _notes.indexWhere((n) => n.id == note.id);
-      if (index != -1) _notes[index] = note;
+      if (index != -1) _notes[index] = offlineNote;
       notifyListeners();
 
-      await _remoteUseCase.updateNote(note);
+      final isConnected = await InternetManager.instance.isConnected();
+      if (isConnected) {
+        await _remoteUseCase.updateNote(offlineNote);
+        final syncedNote = offlineNote.copyWith(isSynced: true);
+        await _localUseCase.updateNote(syncedNote);
+        _notes[index] = syncedNote;
+        notifyListeners();
+      }
     } catch (e) {
       _error = "Failed to update note";
       notifyListeners();
@@ -52,31 +89,36 @@ class NoteProvider with ChangeNotifier {
       _notes.removeWhere((n) => n.id == noteId);
       notifyListeners();
 
-      await _remoteUseCase.deleteNote(noteId);
+      final isConnected = await InternetManager.instance.isConnected();
+      if (isConnected) {
+        await _remoteUseCase.deleteNote(noteId);
+      }
     } catch (e) {
       _error = "Failed to delete note";
       notifyListeners();
     }
   }
 
-  /// 🟢 Get a note by ID (in-memory)
-  NoteModel? getNoteById(String id) {
-    return _notes.firstWhere(
-      (n) => n.id == id,
-      orElse:
-          () => NoteModel(
-            id: '',
-            title: '',
-            content: '',
-            tags: '',
-            priority: '',
-            color: 0,
-            createdAt: DateTime.now(),
-          ),
-    );
+  /// 🟢 Sync all unsynced notes when internet available
+  Future<void> syncUnsyncedNotes(String userId) async {
+    try {
+      final unsyncedNotes = _notes.where((n) => !n.isSynced).toList();
+
+      for (final note in unsyncedNotes) {
+        await _remoteUseCase.addNote(note);
+        final syncedNote = note.copyWith(isSynced: true);
+        await _localUseCase.updateNote(syncedNote);
+        final index = _notes.indexWhere((n) => n.id == note.id);
+        if (index != -1) _notes[index] = syncedNote;
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print("Auto Sync failed: $e");
+    }
   }
 
-  /// 🟢 Fetch all notes: remote first → fallback to local
+  /// 🟢 Fetch all notes
   Future<void> fetchNotes(String userId) async {
     _isLoading = true;
     _error = null;
@@ -84,7 +126,7 @@ class NoteProvider with ChangeNotifier {
 
     try {
       _notes = await _remoteUseCase.getAllNotes(userId);
-    } catch (e) {
+    } catch (_) {
       try {
         _notes = await _localUseCase.getAllNotes('');
       } catch (e) {
@@ -96,7 +138,197 @@ class NoteProvider with ChangeNotifier {
     }
   }
 
-  /// 🟢 Get a note by ID (local DB)
+  /// 🟢 Get single note from memory
+  NoteModel? getNoteById(String id) {
+    try {
+      return _notes.firstWhere((n) => n.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// 🟢 Get note from local DB
+  Future<NoteModel?> getNoteByIdOffline(String noteId) async {
+    try {
+      return await _localUseCase.getNoteById(noteId);
+    } catch (_) {
+      return null;
+    }
+  }
+}*/
+
+class NoteProvider with ChangeNotifier {
+  final RemoteNoteUseCase _remoteUseCase = sl<RemoteNoteUseCase>();
+  final LocalNoteUseCase _localUseCase = sl<LocalNoteUseCase>();
+
+  List<NoteModel> _notes = [];
+
+  // ✅ Enum-based states
+  NoteFetchState _fetchState = NoteFetchState.initial;
+  NoteOperationState _operationState = NoteOperationState.idle;
+
+  String? _error;
+
+  List<NoteModel> get notes => _notes;
+  NoteFetchState get fetchState => _fetchState;
+  NoteOperationState get operationState => _operationState;
+  String? get error => _error;
+
+  late StreamSubscription<bool> _connectivitySubscription;
+
+  void initializeAutoSync(String userId) {
+    _connectivitySubscription = InternetManager.instance.isConnectedStream.listen((isConnected) {
+      if (isConnected) {
+        syncUnsyncedNotes(userId);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  /// 🟢 Add Note
+  Future<void> addNote(NoteModel note) async {
+    _operationState = NoteOperationState.creating;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final offlineNote = note.copyWith(isSynced: false);
+      await _localUseCase.addNote(offlineNote);
+      _notes.insert(0, offlineNote);
+      notifyListeners();
+
+      final isConnected = await InternetManager.instance.isConnected();
+      if (isConnected) {
+        await _remoteUseCase.addNote(offlineNote);
+        final syncedNote = offlineNote.copyWith(isSynced: true);
+        await _localUseCase.updateNote(syncedNote);
+        _notes[_notes.indexWhere((n) => n.id == note.id)] = syncedNote;
+      }
+
+      _operationState = NoteOperationState.success;
+    } catch (e) {
+      _operationState = NoteOperationState.error;
+      _error = "Failed to add note";
+    }
+
+    notifyListeners();
+  }
+
+  /// 🟢 Update Note
+  Future<void> updateNote(NoteModel note) async {
+    _operationState = NoteOperationState.updating;
+    _error = null;
+    notifyListeners();
+
+    try {
+      final offlineNote = note.copyWith(isSynced: false);
+      await _localUseCase.updateNote(offlineNote);
+      final index = _notes.indexWhere((n) => n.id == note.id);
+      if (index != -1) _notes[index] = offlineNote;
+      notifyListeners();
+
+      final isConnected = await InternetManager.instance.isConnected();
+      if (isConnected) {
+        await _remoteUseCase.updateNote(offlineNote);
+        final syncedNote = offlineNote.copyWith(isSynced: true);
+        await _localUseCase.updateNote(syncedNote);
+        _notes[index] = syncedNote;
+      }
+
+      _operationState = NoteOperationState.success;
+    } catch (e) {
+      _operationState = NoteOperationState.error;
+      _error = "Failed to update note";
+    }
+
+    notifyListeners();
+  }
+
+  /// 🟢 Delete Note
+  Future<void> deleteNote(String noteId) async {
+    _operationState = NoteOperationState.deleting;
+    _error = null;
+    notifyListeners();
+
+    try {
+      await _localUseCase.deleteNote(noteId);
+      _notes.removeWhere((n) => n.id == noteId);
+      notifyListeners();
+
+      final isConnected = await InternetManager.instance.isConnected();
+      if (isConnected) {
+        await _remoteUseCase.deleteNote(noteId);
+      }
+
+      _operationState = NoteOperationState.success;
+    } catch (e) {
+      _operationState = NoteOperationState.error;
+      _error = "Failed to delete note";
+    }
+
+    notifyListeners();
+  }
+
+  /// 🟢 Sync All
+  Future<void> syncUnsyncedNotes(String userId) async {
+    _operationState = NoteOperationState.syncing;
+    notifyListeners();
+
+    try {
+      final unsyncedNotes = _notes.where((n) => !n.isSynced).toList();
+
+      for (final note in unsyncedNotes) {
+        await _remoteUseCase.addNote(note);
+        final syncedNote = note.copyWith(isSynced: true);
+        await _localUseCase.updateNote(syncedNote);
+        final index = _notes.indexWhere((n) => n.id == note.id);
+        if (index != -1) _notes[index] = syncedNote;
+      }
+
+      _operationState = NoteOperationState.success;
+    } catch (e) {
+      _operationState = NoteOperationState.error;
+      _error = "Sync failed: $e";
+    }
+
+    notifyListeners();
+  }
+
+  /// 🟢 Fetch Notes
+  Future<void> fetchNotes(String userId) async {
+    _fetchState = NoteFetchState.loading;
+    _error = null;
+    notifyListeners();
+
+    try {
+      _notes = await _remoteUseCase.getAllNotes(userId);
+      _fetchState = NoteFetchState.success;
+    } catch (_) {
+      try {
+        _notes = await _localUseCase.getAllNotes('');
+        _fetchState = NoteFetchState.success;
+      } catch (e) {
+        _fetchState = NoteFetchState.error;
+        _error = "Failed to load notes locally.";
+      }
+    }
+
+    notifyListeners();
+  }
+
+  NoteModel? getNoteById(String id) {
+    try {
+      return _notes.firstWhere((n) => n.id == id);
+    } catch (_) {
+      return null;
+    }
+  }
+
   Future<NoteModel?> getNoteByIdOffline(String noteId) async {
     try {
       return await _localUseCase.getNoteById(noteId);
