@@ -1,12 +1,10 @@
-import 'package:note_app/features/auth/provider/auth_provider.dart';
-import 'package:note_app/features/auth/provider/email_verification_provider.dart';
-import 'package:provider/provider.dart';
-
 import 'core/env/env.dart';
 import 'core/di/service_locator.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:note_app/route/app_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:note_app/features/auth/provider/auth_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
