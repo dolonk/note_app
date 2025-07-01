@@ -10,7 +10,7 @@ class AuthRemoteData {
     return client.auth.signUp(email: email, password: password);
   }
 
-  Future<void> saveUserProfile(UserProfile user) async {
+  Future<void> saveUserProfile(UserModel user) async {
     await client.from('user_profiles').insert({
       'id': user.id,
       'name': user.name,
@@ -25,9 +25,9 @@ class AuthRemoteData {
 
   Future<void> logout() => client.auth.signOut();
 
-  UserProfile? get currentUser {
+  UserModel? get currentUser {
     final supabaseUser = client.auth.currentUser;
     if (supabaseUser == null) return null;
-    return UserProfile(id: supabaseUser.id, name: '', email: supabaseUser.email ?? '');
+    return UserModel(id: supabaseUser.id, name: '', email: supabaseUser.email ?? '');
   }
 }

@@ -1,13 +1,27 @@
-class UserProfile {
-  final String id;
-  final String name;
-  final String? email;
-  final String? bio;
-  final String? avatar;
-  final String? role;
-  final DateTime? createdAt;
+import '../domain/entities/user_entity.dart';
 
-  UserProfile({required this.id, required this.name, this.email, this.bio, this.avatar, this.role, this.createdAt});
+class UserModel extends UserEntity {
+  const UserModel({
+    required super.id,
+    required super.name,
+    super.email,
+    super.bio,
+    super.avatar,
+    super.role,
+    super.createdAt,
+  });
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'],
+      name: map['name'],
+      email: map['email'],
+      bio: map['bio'],
+      avatar: map['avatar'],
+      role: map['role'],
+      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -21,33 +35,21 @@ class UserProfile {
     }..removeWhere((key, value) => value == null);
   }
 
-  factory UserProfile.fromMap(Map<String, dynamic> map) {
-    return UserProfile(
-      id: map['id'],
-      name: map['name'],
-      email: map['email'],
-      bio: map['bio'],
-      avatar: map['avatar'],
-      role: map['role'],
-      createdAt: map['created_at'] != null ? DateTime.parse(map['created_at']) : null,
-    );
-  }
-
-  UserProfile copyWith({
+  UserModel copyWith({
     String? id,
     String? name,
     String? email,
-    String? avatar,
     String? bio,
+    String? avatar,
     String? role,
     DateTime? createdAt,
   }) {
-    return UserProfile(
+    return UserModel(
       id: id ?? this.id,
       name: name ?? this.name,
       email: email ?? this.email,
-      avatar: avatar ?? this.avatar,
       bio: bio ?? this.bio,
+      avatar: avatar ?? this.avatar,
       role: role ?? this.role,
       createdAt: createdAt ?? this.createdAt,
     );

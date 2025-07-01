@@ -1,9 +1,9 @@
 import '../../../model/user_profile.dart';
 
 abstract class AuthRepository {
-  Future<String?> signUp({required UserProfile user, required String password});
+  Future<String?> signUp({required UserModel user, required String password});
 
-  Future<void> saveUserProfile(UserProfile profile);
+  Future<void> saveUserProfile(UserModel profile);
 
   Future<String?> login({required String email, required String password});
 
@@ -15,5 +15,5 @@ abstract class AuthRepository {
 
   Future<void> logout();
 
-  UserProfile? getCurrentUser();
+  UserModel? getCurrentUser();
 }

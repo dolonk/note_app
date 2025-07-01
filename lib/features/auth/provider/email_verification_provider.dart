@@ -47,7 +47,7 @@ class EmailVerificationProvider with ChangeNotifier {
     return _authUseCase.isEmailVerified(email, password);
   }
 
-  Future<void> saveUserProfile(UserProfile profile) async {
+  Future<void> saveUserProfile(UserModel profile) async {
     await _authUseCase.repository.saveUserProfile(profile);
   }
 

@@ -1,6 +1,5 @@
-import 'package:note_app/data_layer/domain/repositories/notes/local/local_note_repository.dart';
-
 import '../../model/note_model.dart';
+import 'package:note_app/data_layer/domain/repositories/notes/local/local_note_repository.dart';
 
 class LocalNoteUseCase {
   final LocalNoteRepository localRepository;

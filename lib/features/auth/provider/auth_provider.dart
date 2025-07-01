@@ -10,7 +10,7 @@ class AuthProvider with ChangeNotifier {
   String? _errorMessage;
   String? get errorMessage => _errorMessage;
 
-  Future<String?> signUp({required UserProfile user, required String password}) async {
+  Future<String?> signUp({required UserModel user, required String password}) async {
     try {
       isLoading = true;
       notifyListeners();

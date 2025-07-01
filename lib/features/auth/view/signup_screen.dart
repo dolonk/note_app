@@ -20,7 +20,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void _submit() async {
     final vm = Provider.of<AuthProvider>(context, listen: false);
 
-    final user = UserProfile(
+    final user = UserModel(
       id: '',
       name: 'Dolon',
       email: emailController.text.trim(),

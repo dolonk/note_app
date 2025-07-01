@@ -6,7 +6,7 @@ class AuthUseCase {
 
   AuthUseCase(this.repository);
 
-  Future<String?> signUp({required UserProfile user, required String password}) {
+  Future<String?> signUp({required UserModel user, required String password}) {
     return repository.signUp(user: user, password: password);
   }
 
@@ -26,7 +26,7 @@ class AuthUseCase {
     return repository.logout();
   }
 
-  UserProfile? getCurrentUser() {
+  UserModel? getCurrentUser() {
     return repository.getCurrentUser();
   }
 }

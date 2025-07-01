@@ -8,7 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:note_app/features/auth/provider/email_verification_provider.dart';
 
 class EmailVerificationScreen extends StatefulWidget {
-  final UserProfile userProfile;
+  final UserModel userProfile;
   final String password;
   const EmailVerificationScreen({super.key, required this.userProfile, required this.password});
 

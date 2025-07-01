@@ -10,7 +10,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl(this.remoteData);
 
   @override
-  Future<String?> signUp({required UserProfile user, required String password}) async {
+  Future<String?> signUp({required UserModel user, required String password}) async {
     final response = await remoteData.signup(email: user.email!, password: password);
 
     final supaUser = response.user;
@@ -25,7 +25,7 @@ class AuthRepositoryImpl implements AuthRepository {
     }
 
     // Save profile to DB
-    final profile = UserProfile(
+    final profile = UserModel(
       id: supaUser.id,
       name: user.name,
       email: user.email,
@@ -40,7 +40,7 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<void> saveUserProfile(UserProfile profile) {
+  Future<void> saveUserProfile(UserModel profile) {
     return remoteData.saveUserProfile(profile);
   }
 
@@ -92,7 +92,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<void> logout() => remoteData.logout();
 
   @override
-  UserProfile? getCurrentUser() {
+  UserModel? getCurrentUser() {
     return remoteData.currentUser;
   }
 }

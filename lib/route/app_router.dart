@@ -31,7 +31,7 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final args = state.extra as Map<String, dynamic>;
         return EmailVerificationScreen(
-          userProfile: args['userProfile'] as UserProfile,
+          userProfile: args['userProfile'] as UserModel,
           password: args['password'] as String,
         );
       },
