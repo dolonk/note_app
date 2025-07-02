@@ -1,6 +1,6 @@
 import '../core/di/service_locator.dart';
 import '../data_layer/domain/use_cases/auth_use_case.dart';
-import '../data_layer/model/user_profile.dart';
+import '../data_layer/model/user_model.dart';
 import '../features/auth/view/email_verification_screen.dart';
 import '../features/auth/view/login_screen.dart';
 import '../features/auth/view/signup_screen.dart';

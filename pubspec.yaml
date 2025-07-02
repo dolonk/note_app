@@ -11,6 +11,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
   # state management
   provider: ^6.1.5
 
@@ -18,13 +19,18 @@ dependencies:
   supabase_flutter: ^2.9.1
   sqflite: ^2.4.2
 
-  # core dependencies
-  cupertino_icons: ^1.0.8
+  # Icons
   iconsax: ^0.0.8
-  get_it: ^8.0.3  # dependency ingestion
+  font_awesome_flutter: ^10.8.0
+  cupertino_icons: ^1.0.6
+
+  # Utility
+  intl: ^0.18.1
+  get_it: ^8.0.3
+  shimmer: ^3.0.0
   go_router: ^15.2.4
   connectivity_plus: ^6.1.4
-
+  google_fonts: ^6.2.1
 
 dev_dependencies:
   flutter_test:

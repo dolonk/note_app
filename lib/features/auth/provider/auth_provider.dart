@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../core/di/service_locator.dart';
-import '../../../data_layer/model/user_profile.dart';
+import '../../../data_layer/model/user_model.dart';
 import '../../../data_layer/domain/use_cases/auth_use_case.dart';
 
 class AuthProvider with ChangeNotifier {

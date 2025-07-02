@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 import '../../../route/app_route_names.dart';
-import '../../../data_layer/model/user_profile.dart';
+import '../../../data_layer/model/user_model.dart';
 import '../../../utils/snackbar_toast/snack_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:note_app/features/auth/provider/email_verification_provider.dart';

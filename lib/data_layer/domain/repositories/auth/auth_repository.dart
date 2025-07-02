@@ -1,4 +1,4 @@
-import '../../../model/user_profile.dart';
+import '../../../model/user_model.dart';
 
 abstract class AuthRepository {
   Future<String?> signUp({required UserModel user, required String password});

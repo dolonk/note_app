@@ -1,6 +1,6 @@
 import 'auth_repository.dart';
 import 'package:flutter/material.dart';
-import '../../../model/user_profile.dart';
+import '../../../model/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../data_sources/remote/auth_remote_datasource.dart';
 

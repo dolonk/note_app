@@ -11,6 +11,7 @@ class DColors {
   // 🔤 Text Colors
   static const Color textPrimary = Color(0xFF7B7B7B);
   static const Color textSecondary = Color(0xFF004368);
+  static const bodyTextColor = Colors.black87;
   static const Color textWhite = Colors.white;
 
   // 🗂️ Card Text Colors

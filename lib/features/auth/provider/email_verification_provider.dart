@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../data_layer/domain/use_cases/auth_use_case.dart';
-import '../../../data_layer/model/user_profile.dart';
+import '../../../data_layer/model/user_model.dart';
 
 class EmailVerificationProvider with ChangeNotifier {
   final AuthUseCase _authUseCase = sl<AuthUseCase>();

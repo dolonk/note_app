@@ -1,3 +1,5 @@
+import 'package:note_app/utils/theme/theme.dart';
+
 import 'core/env/env.dart';
 import 'core/di/service_locator.dart';
 import 'package:flutter/material.dart';
@@ -28,7 +30,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp.router(
         title: 'Note App',
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.light(),
+        theme: DAppTheme.lightTheme,
         routerConfig: appRouter,
       ),
     );
