@@ -1,5 +1,6 @@
 class NoteEntity {
   final String? id;
+  final String? userId;
   final String title;
   final String content;
   final String tags;
@@ -11,6 +12,7 @@ class NoteEntity {
 
   NoteEntity({
     this.id,
+    this.userId,
     required this.title,
     required this.content,
     required this.tags,

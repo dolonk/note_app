@@ -1,3 +1,4 @@
+import 'package:note_app/features/note/provider/note_provider.dart';
 import 'package:note_app/utils/theme/theme.dart';
 
 import 'core/env/env.dart';
@@ -26,7 +27,10 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-      providers: [ChangeNotifierProvider(create: (_) => AuthProvider())],
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => NoteProvider()),
+      ],
       child: MaterialApp.router(
         title: 'Note App',
         debugShowCheckedModeBanner: false,

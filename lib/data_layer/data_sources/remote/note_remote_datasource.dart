@@ -7,7 +7,9 @@ class RemoteNoteDataSource {
   RemoteNoteDataSource(this.client);
 
   Future<void> addNote(NoteModel note) async {
-    await client.from('notes').insert(note.toJson());
+    print("Adding note: ${note.toJson()}");
+    final result = await client.from('notes').insert(note.toJson());
+    print('Insert result: $result');
   }
 
   Future<void> deleteNote(String noteId) async {
@@ -21,11 +23,7 @@ class RemoteNoteDataSource {
   }
 
   Future<List<NoteModel>> getAllNotes(String userId) async {
-    final response = await client
-        .from('notes')
-        .select()
-        .eq('user_id', userId)
-        .order('created_at', ascending: false);
+    final response = await client.from('notes').select().eq('user_id', userId).order('created_at', ascending: false);
 
     return (response as List).map((e) => NoteModel.fromJson(e)).toList();
   }

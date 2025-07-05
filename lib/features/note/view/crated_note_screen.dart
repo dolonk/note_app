@@ -1,4 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import '../../../core/di/service_locator.dart';
+import '../../../data_layer/data_sources/remote/note_remote_datasource.dart';
+import '../../../data_layer/model/note_model.dart';
+import '../../../utils/enum/note_enum.dart';
+import '../../../utils/snackbar_toast/snack_bar.dart';
+import '../provider/note_provider.dart';
+import 'package:uuid/uuid.dart';
 
 class CreateNoteScreen extends StatefulWidget {
   const CreateNoteScreen({super.key});
@@ -15,6 +24,15 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
   String _priority = 'Normal';
   Color _selectedColor = Colors.yellow.shade100;
   DateTime? _selectedDate;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final userId = Supabase.instance.client.auth.currentUser?.id ?? '';
+    context.read<NoteProvider>().initializeAutoSync(userId);
+  }
+
 
   @override
   void dispose() {
@@ -43,20 +61,27 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
     final tags = _tagController.text.trim();
 
     if (title.isEmpty || content.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Title and Content are required')));
+      DSnackBar.warning(title: 'Title and Content are required');
       return;
     }
 
-    // You can save data here or pass to provider
-    print("📝 Note Added:");
-    print("Title: $title");
-    print("Content: $content");
-    print("Tags: $tags");
-    print("Priority: $_priority");
-    print("Color: $_selectedColor");
-    print("Date: $_selectedDate");
+    final newNote = NoteModel(
+      id: Uuid().v4(),
+      userId: Supabase.instance.client.auth.currentUser?.id,
+      title: title,
+      content: content,
+      tags: tags,
+      priority: _priority,
+      color: _selectedColor.value,
+      reminderDate: _selectedDate,
+      createdAt: DateTime.now(),
+    );
 
-    // Reset form
+    //_remoteUseCase.addNote(newNote);
+    context.read<NoteProvider>().addNote(newNote);
+  }
+
+  void _resetForm() {
     _titleController.clear();
     _contentController.clear();
     _tagController.clear();
@@ -69,6 +94,17 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<NoteProvider>();
+
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (provider.operationState == NoteOperationState.success) {
+    //     DSnackBar.success(title: "Note created successfully");
+    //     _resetForm();
+    //   } else if (provider.operationState == NoteOperationState.error) {
+    //     DSnackBar.error(title: provider.error ?? 'Failed to create note');
+    //   }
+    // });
+
     return Scaffold(
       appBar: AppBar(title: const Text("➕ Create Note"), centerTitle: true),
       body: SingleChildScrollView(
@@ -91,6 +127,7 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
               decoration: const InputDecoration(labelText: 'Tags (comma-separated)', border: OutlineInputBorder()),
             ),
             const SizedBox(height: 12),
+
             DropdownButtonFormField<String>(
               value: _priority,
               items: const [
@@ -102,6 +139,7 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
               decoration: const InputDecoration(labelText: 'Priority', border: OutlineInputBorder()),
             ),
             const SizedBox(height: 12),
+
             Row(
               children: [
                 Expanded(
@@ -152,9 +190,12 @@ class _CreateNoteScreenState extends State<CreateNoteScreen> {
             ),
             const SizedBox(height: 24),
             ElevatedButton.icon(
-              onPressed: _submitNote,
+              onPressed: provider.operationState == NoteOperationState.creating ? null : _submitNote,
               icon: const Icon(Icons.check),
-              label: const Text("Save Note"),
+              label:
+                  provider.operationState == NoteOperationState.creating
+                      ? const Text("Saving...")
+                      : const Text("Save Note"),
               style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
             ),
           ],

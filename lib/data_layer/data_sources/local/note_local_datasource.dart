@@ -31,6 +31,7 @@ class LocalNoteDataSourceImpl implements LocalNoteDataSource {
         return db.execute('''
           CREATE TABLE notes(
             id TEXT PRIMARY KEY,
+            user_id TEXT,
             title TEXT,
             content TEXT,
             tags TEXT,

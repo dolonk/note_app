@@ -3,6 +3,7 @@ import '../domain/entities/note_entity.dart';
 class NoteModel extends NoteEntity {
   NoteModel({
     super.id,
+    super.userId,
     required super.title,
     required super.content,
     required super.tags,
@@ -16,6 +17,7 @@ class NoteModel extends NoteEntity {
   factory NoteModel.fromJson(Map<String, dynamic> json) {
     return NoteModel(
       id: json['id'] as String?,
+      userId: json['user_id'],
       title: json['title'] ?? '',
       content: json['content'] ?? '',
       tags: json['tags'] ?? '',
@@ -29,6 +31,7 @@ class NoteModel extends NoteEntity {
 
   Map<String, dynamic> toJson() {
     return {
+      'user_id': userId,
       'title': title,
       'content': content,
       'tags': tags,
@@ -42,6 +45,7 @@ class NoteModel extends NoteEntity {
 
   NoteModel copyWith({
     String? id,
+    String? userId,
     String? title,
     String? content,
     String? tags,
@@ -53,6 +57,7 @@ class NoteModel extends NoteEntity {
   }) {
     return NoteModel(
       id: id ?? this.id,
+      userId: userId ?? this.userId,
       title: title ?? this.title,
       content: content ?? this.content,
       tags: tags ?? this.tags,

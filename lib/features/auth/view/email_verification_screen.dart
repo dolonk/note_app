@@ -42,7 +42,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
 
         if (!mounted) return;
         DSnackBar.success(title: "✅ Email verified!");
-        context.pushReplacement(AppRouteNames.dashboard);
+        context.pushReplacement(AppRouteNames.bottomNavBar);
         return;
       }
 

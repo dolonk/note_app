@@ -37,7 +37,7 @@ class _SignupScreenState extends State<SignupScreen> {
       );
     } else if (success == null) {
       DSnackBar.success(title: "✅ Account created!");
-      context.pushReplacement(AppRouteNames.dashboard);
+      context.pushReplacement(AppRouteNames.bottomNavBar);
     } else {
       DSnackBar.error(title: vm.errorMessage ?? '❌ Signup failed');
     }

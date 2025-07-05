@@ -55,12 +55,17 @@ class NoteProvider with ChangeNotifier {
 
       final isConnected = await InternetManager.instance.isConnected();
       if (isConnected) {
+
+        print("offlineNote: ${offlineNote.toJson()}");
         await _remoteUseCase.addNote(offlineNote);
         final syncedNote = offlineNote.copyWith(isSynced: true);
+
+
         await _localUseCase.updateNote(syncedNote);
         _notes[_notes.indexWhere((n) => n.id == note.id)] = syncedNote;
       }
 
+      print('Data save successfully');
       _operationState = NoteOperationState.success;
     } catch (e) {
       _operationState = NoteOperationState.error;

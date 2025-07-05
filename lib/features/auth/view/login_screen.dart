@@ -34,7 +34,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (success) {
       DSnackBar.success(title: "✅ Login successful");
-      context.pushReplacement(AppRouteNames.dashboard);
+      context.pushReplacement(AppRouteNames.bottomNavBar);
     } else {
       DSnackBar.error(title: vm.errorMessage ?? "❌ Login failed");
     }
