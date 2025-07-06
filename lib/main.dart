@@ -9,6 +9,8 @@ import 'package:note_app/route/app_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:note_app/features/auth/provider/auth_provider.dart';
 
+import 'features/auth/view_models/login_viewmodel.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 

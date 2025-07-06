@@ -12,6 +12,8 @@ import '../../data_layer/domain/repositories/auth/auth_repository_impl.dart';
 import '../../data_layer/domain/repositories/notes/local/local_note_repository.dart';
 import '../../data_layer/domain/repositories/notes/local/local_note_repository_impl.dart';
 import '../../data_layer/domain/use_cases/auth_use_case.dart';
+import '../../features/auth/provider/auth_provider.dart';
+import '../../features/note/provider/note_provider.dart';
 
 final sl = GetIt.instance;
 
@@ -23,6 +25,7 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton(() => AuthRemoteData(sl()));
   sl.registerLazySingleton<AuthRepository>(() => AuthRepositoryImpl(sl()));
   sl.registerLazySingleton(() => AuthUseCase(sl()));
+  sl.registerLazySingleton<AuthProvider>(() => AuthProvider());
 
   // 🧠 Remote Note Repository
   sl.registerLazySingleton(() => RemoteNoteDataSource(sl()));
@@ -33,4 +36,5 @@ Future<void> initDependencies() async {
   sl.registerLazySingleton<LocalNoteDataSource>(() => LocalNoteDataSourceImpl());
   sl.registerLazySingleton<LocalNoteRepository>(() => LocalNoteRepositoryImpl(sl()));
   sl.registerLazySingleton(() => LocalNoteUseCase(sl()));
+  sl.registerLazySingleton<NoteProvider>(() => NoteProvider());
 }

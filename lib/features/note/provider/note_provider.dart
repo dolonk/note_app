@@ -5,6 +5,7 @@ import '../../../data_layer/domain/use_cases/local_note_use_case.dart';
 import '../../../data_layer/model/note_model.dart';
 import '../../../data_layer/domain/use_cases/remote_note_use_case.dart';
 import '../../../utils/enum/note_enum.dart';
+import '../../../utils/exceptions/supabase_exception_handler.dart';
 import '../../../utils/network_manager/network_manager.dart';
 
 class NoteProvider with ChangeNotifier {
@@ -55,11 +56,9 @@ class NoteProvider with ChangeNotifier {
 
       final isConnected = await InternetManager.instance.isConnected();
       if (isConnected) {
-
         print("offlineNote: ${offlineNote.toJson()}");
         await _remoteUseCase.addNote(offlineNote);
         final syncedNote = offlineNote.copyWith(isSynced: true);
-
 
         await _localUseCase.updateNote(syncedNote);
         _notes[_notes.indexWhere((n) => n.id == note.id)] = syncedNote;
@@ -69,7 +68,8 @@ class NoteProvider with ChangeNotifier {
       _operationState = NoteOperationState.success;
     } catch (e) {
       _operationState = NoteOperationState.error;
-      _error = "Failed to add note";
+      _error = "Failed to Add note";
+      SupabaseExceptionHandler.parse(e);
     }
 
     notifyListeners();
@@ -100,6 +100,7 @@ class NoteProvider with ChangeNotifier {
     } catch (e) {
       _operationState = NoteOperationState.error;
       _error = "Failed to update note";
+      SupabaseExceptionHandler.parse(e);
     }
 
     notifyListeners();
@@ -125,6 +126,7 @@ class NoteProvider with ChangeNotifier {
     } catch (e) {
       _operationState = NoteOperationState.error;
       _error = "Failed to delete note";
+      SupabaseExceptionHandler.parse(e);
     }
 
     notifyListeners();

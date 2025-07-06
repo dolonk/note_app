@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'note/view/crated_note_screen.dart';
+import 'note/view_screens/dashboard_screen.dart';
+import 'note/view_screens/crated_note_screen.dart';
 import 'package:note_app/features/profile/view/profile_screen.dart';
-import 'package:note_app/features/note/view/dashboard_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -13,7 +13,7 @@ class BottomNavBar extends StatefulWidget {
 class _BottomNavBarState extends State<BottomNavBar> {
   int _selectedIndex = 0;
 
-  final List<Widget> _pages = const [DashboardScreen(), CreateNoteScreen(), ProfileScreen()];
+  final List<Widget> _pages = [const DashboardScreen(), const CreateNoteScreen(), const ProfileScreen()];
 
   void _onItemTapped(int index) {
     setState(() => _selectedIndex = index);

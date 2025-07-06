@@ -9,5 +9,4 @@ class AppRouteNames {
   static const String dashboard = '/dashboard';
   static const String createdNotes = '/createdNotes';
   static const String profile = '/profile';
-
 }
