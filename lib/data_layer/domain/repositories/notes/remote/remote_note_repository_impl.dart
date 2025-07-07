@@ -1,6 +1,8 @@
 import 'remote_note_repository.dart';
+import 'package:flutter/foundation.dart';
 import '../../../../model/note_model.dart';
 import '../../../../data_sources/remote/note_remote_datasource.dart';
+import '../../../../../utils/exceptions/supabase_exception_handler.dart';
 
 class RemoteNoteRepositoryImpl implements RemoteNoteRepository {
   final RemoteNoteDataSource remote;
@@ -8,17 +10,57 @@ class RemoteNoteRepositoryImpl implements RemoteNoteRepository {
   RemoteNoteRepositoryImpl(this.remote);
 
   @override
-  Future<void> addNote(NoteModel note) => remote.addNote(note);
+  Future<void> addNote(NoteModel note) async {
+    try {
+      await remote.addNote(note);
+    } catch (e) {
+      final error = SupabaseExceptionHandler.parse(e);
+      debugPrint("📝 Add Note Error: $error");
+      throw Exception(error);
+    }
+  }
 
   @override
-  Future<void> updateNote(NoteModel note) => remote.updateNote(note);
+  Future<void> updateNote(NoteModel note) async {
+    try {
+      await remote.updateNote(note);
+    } catch (e) {
+      final error = SupabaseExceptionHandler.parse(e);
+      debugPrint("📝 Update Note Error: $error");
+      throw Exception(error);
+    }
+  }
 
   @override
-  Future<List<NoteModel>> getAllNotes(String userId) => remote.getAllNotes(userId);
+  Future<List<NoteModel>> getAllNotes(String userId) async {
+    try {
+      return await remote.getAllNotes(userId);
+    } catch (e) {
+      final error = SupabaseExceptionHandler.parse(e);
+      debugPrint("📒 Get All Notes Error: $error");
+      throw Exception(error);
+    }
+  }
 
   @override
-  Future<NoteModel?> getNoteById(String noteId) => remote.getNoteById(noteId);
+  Future<NoteModel?> getNoteById(String noteId) async {
+    try {
+      return await remote.getNoteById(noteId);
+    } catch (e) {
+      final error = SupabaseExceptionHandler.parse(e);
+      debugPrint("🔍 Get Note By ID Error: $error");
+      throw Exception(error);
+    }
+  }
 
   @override
-  Future<void> deleteNote(String noteId) => remote.deleteNote(noteId);
+  Future<void> deleteNote(String noteId) async {
+    try {
+      await remote.deleteNote(noteId);
+    } catch (e) {
+      final error = SupabaseExceptionHandler.parse(e);
+      debugPrint("🗑️ Delete Note Error: $error");
+      throw Exception(error);
+    }
+  }
 }

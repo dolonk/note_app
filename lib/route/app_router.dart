@@ -13,16 +13,29 @@ import 'package:note_app/features/bottom_nav_bar.dart';
 import 'package:note_app/features/profile/view/profile_screen.dart';
 
 final AuthUseCase _authUseCase = sl<AuthUseCase>();
+
 final GoRouter appRouter = GoRouter(
   initialLocation: AppRouteNames.login,
   navigatorKey: GlobalContext.navigatorKey,
-  // redirect: (context, state) async {
-  //   final loggedIn = await _authUseCase.isUserAlreadyLoggedIn();
-  //   final loggingIn = state.matchedLocation == AppRouteNames.login;
-  //   if (!loggedIn && !loggingIn) return AppRouteNames.login;
-  //   if (loggedIn && loggingIn) return AppRouteNames.bottomNavBar;
-  //   return null;
-  // },
+  redirect: (context, state) async {
+    final loggedIn = await _authUseCase.isUserAlreadyLoggedIn();
+
+    final goingToLogin = state.matchedLocation == AppRouteNames.login;
+    final goingToSignup = state.matchedLocation == AppRouteNames.signup;
+    final goingToVerifyEmail = state.matchedLocation == AppRouteNames.verifyEmail;
+
+    // ✅ Not logged in: only allow login and signup
+    if (!loggedIn && !goingToLogin && !goingToSignup && !goingToVerifyEmail) {
+      return AppRouteNames.login;
+    }
+
+    // ✅ Already logged in: block login/signup
+    if (loggedIn && (goingToLogin || goingToSignup || goingToVerifyEmail)) {
+      return AppRouteNames.bottomNavBar;
+    }
+
+    return null;
+  },
   routes: [
     GoRoute(path: AppRouteNames.login, builder: (context, state) => const LoginScreen()),
     GoRoute(path: AppRouteNames.signup, builder: (context, state) => const SignupScreen()),

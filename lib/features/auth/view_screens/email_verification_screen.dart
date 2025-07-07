@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:note_app/features/auth/view_models/email_verification_viewmodel.dart';
 import 'package:provider/provider.dart';
-import 'package:go_router/go_router.dart';
-import '../../../route/app_route_names.dart';
 import '../../../data_layer/model/user_model.dart';
-import '../../../utils/snackbar_toast/snack_bar.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:note_app/features/auth/provider/email_verification_provider.dart';
+import 'package:note_app/features/auth/view_models/email_verification_viewmodel.dart';
 
 class EmailVerificationScreen extends StatelessWidget {
   final UserModel userProfile;
@@ -16,16 +11,14 @@ class EmailVerificationScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => EmailVerificationProvider()),
-        ChangeNotifierProxyProvider<EmailVerificationProvider, EmailVerificationViewModel>(
-          create: (_) => EmailVerificationViewModel(),
-          update: (_, emailProvider, vm) => vm!..updateEmailProvider(emailProvider, context, userProfile, password),
-        ),
-      ],
-      child: Consumer<EmailVerificationProvider>(
-        builder: (context, emailProvider, _) {
+    return ChangeNotifierProvider(
+      create: (_) {
+        final vm = EmailVerificationViewModel();
+        vm.init(context: context, userProfile: userProfile, password: password);
+        return vm;
+      },
+      child: Consumer<EmailVerificationViewModel>(
+        builder: (context, vm, _) {
           return Scaffold(
             appBar: AppBar(title: const Text("Verify Your Email")),
             body: Padding(
@@ -36,12 +29,12 @@ class EmailVerificationScreen extends StatelessWidget {
                 children: [
                   Text("📩 A verification email has been sent to:\n${userProfile.email}"),
                   const SizedBox(height: 30),
-                  emailProvider.canResend
+                  vm.canResend
                       ? ElevatedButton(
-                        onPressed: () => emailProvider.resendEmail(email: userProfile.email!, password: password),
+                        onPressed: () => vm.resendEmail(email: userProfile.email!, password: password),
                         child: const Text("Resend Email"),
                       )
-                      : Text("⏳ You can resend in ${emailProvider.secondsLeft} seconds"),
+                      : Text("⏳ You can resend in ${vm.secondsLeft} seconds"),
                   const SizedBox(height: 24),
                   const Text("Once verified, you’ll be redirected automatically."),
                 ],

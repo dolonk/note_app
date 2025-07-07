@@ -1,8 +1,8 @@
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
-import '../../../core/di/service_locator.dart';
 import '../provider/note_provider.dart';
 import '../../../utils/enum/note_enum.dart';
+import '../../../core/di/service_locator.dart';
 import '../../../data_layer/model/note_model.dart';
 import '../../../utils/snackbar_toast/snack_bar.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

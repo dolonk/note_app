@@ -5,7 +5,6 @@ import '../../../data_layer/domain/use_cases/local_note_use_case.dart';
 import '../../../data_layer/model/note_model.dart';
 import '../../../data_layer/domain/use_cases/remote_note_use_case.dart';
 import '../../../utils/enum/note_enum.dart';
-import '../../../utils/exceptions/supabase_exception_handler.dart';
 import '../../../utils/network_manager/network_manager.dart';
 
 class NoteProvider with ChangeNotifier {
@@ -64,12 +63,10 @@ class NoteProvider with ChangeNotifier {
         _notes[_notes.indexWhere((n) => n.id == note.id)] = syncedNote;
       }
 
-      print('Data save successfully');
       _operationState = NoteOperationState.success;
     } catch (e) {
       _operationState = NoteOperationState.error;
-      _error = "Failed to Add note";
-      SupabaseExceptionHandler.parse(e);
+      _error = "Failed to Add note: ${e.toString()}";
     }
 
     notifyListeners();
@@ -99,8 +96,7 @@ class NoteProvider with ChangeNotifier {
       _operationState = NoteOperationState.success;
     } catch (e) {
       _operationState = NoteOperationState.error;
-      _error = "Failed to update note";
-      SupabaseExceptionHandler.parse(e);
+      _error = "Failed to update note: ${e.toString()}";
     }
 
     notifyListeners();
@@ -125,8 +121,7 @@ class NoteProvider with ChangeNotifier {
       _operationState = NoteOperationState.success;
     } catch (e) {
       _operationState = NoteOperationState.error;
-      _error = "Failed to delete note";
-      SupabaseExceptionHandler.parse(e);
+      _error = "Failed to delete note: ${e.toString()}";
     }
 
     notifyListeners();
@@ -172,7 +167,7 @@ class NoteProvider with ChangeNotifier {
         _fetchState = NoteFetchState.success;
       } catch (e) {
         _fetchState = NoteFetchState.error;
-        _error = "Failed to load notes locally.";
+        _error = "Failed to load notes locally: ${e.toString()}";
       }
     }
 

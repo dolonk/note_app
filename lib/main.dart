@@ -30,8 +30,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthProvider()),
-        ChangeNotifierProvider(create: (_) => NoteProvider()),
+        ChangeNotifierProvider<AuthProvider>.value(value: sl<AuthProvider>()),
+        ChangeNotifierProvider<NoteProvider>.value(value: sl<NoteProvider>()),
       ],
       child: MaterialApp.router(
         title: 'Note App',
