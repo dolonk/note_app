@@ -4,6 +4,7 @@ import '../../constants/colors.dart';
 
 class DAlertDialogTheme {
   DAlertDialogTheme._();
+
   static DialogTheme alertDialogThemeTheme = DialogTheme(
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
     backgroundColor: DColors.white,

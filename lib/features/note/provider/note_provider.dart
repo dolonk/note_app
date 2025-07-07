@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../data_layer/domain/use_cases/local_note_use_case.dart';
-import '../../../data_layer/model/note_model.dart';
-import '../../../data_layer/domain/use_cases/remote_note_use_case.dart';
 import '../../../utils/enum/note_enum.dart';
+import '../../../../core/di/service_locator.dart';
+import '../../../data_layer/model/note_model.dart';
 import '../../../utils/network_manager/network_manager.dart';
+import '../../../data_layer/domain/use_cases/local_note_use_case.dart';
+import '../../../data_layer/domain/use_cases/remote_note_use_case.dart';
 
 class NoteProvider with ChangeNotifier {
   final RemoteNoteUseCase _remoteUseCase = sl<RemoteNoteUseCase>();
@@ -33,12 +33,6 @@ class NoteProvider with ChangeNotifier {
         syncUnsyncedNotes(userId);
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _connectivitySubscription.cancel();
-    super.dispose();
   }
 
   /// 🟢 Add Note
@@ -156,7 +150,6 @@ class NoteProvider with ChangeNotifier {
   Future<void> fetchNotes(String userId) async {
     _fetchState = NoteFetchState.loading;
     _error = null;
-    notifyListeners();
 
     try {
       _notes = await _remoteUseCase.getAllNotes(userId);
@@ -174,19 +167,18 @@ class NoteProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  NoteModel? getNoteById(String id) {
-    try {
-      return _notes.firstWhere((n) => n.id == id);
-    } catch (_) {
-      return null;
-    }
-  }
-
+  /// 🟢 Fetch Note by ID Offline
   Future<NoteModel?> getNoteByIdOffline(String noteId) async {
     try {
       return await _localUseCase.getNoteById(noteId);
     } catch (_) {
       return null;
     }
+  }
+
+  @override
+  void dispose() {
+    _connectivitySubscription.cancel();
+    super.dispose();
   }
 }

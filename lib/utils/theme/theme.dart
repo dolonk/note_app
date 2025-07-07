@@ -27,7 +27,7 @@ class DAppTheme {
     appBarTheme: DAppBarTheme.lightAppBarTheme,
     fontFamily: GoogleFonts.poppins().fontFamily,
     checkboxTheme: DCheckBoxTheme.lightCheckboxTheme,
-    dialogTheme: DAlertDialogTheme.alertDialogThemeTheme,
+    //dialogTheme: DAlertDialogTheme().alertDialogThemeTheme,
     bottomSheetTheme: DBottomSheetTheme.lightBottomSheetTheme,
     elevatedButtonTheme: DElevatedButtonTheme.lightElevatedButtonTheme,
     outlinedButtonTheme: DOutlinedButtonTheme.lightOutlinedButtonTheme,
