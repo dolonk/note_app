@@ -8,6 +8,7 @@ class NoteEntity {
   final int color;
   final DateTime? reminderDate;
   final DateTime createdAt;
+  final DateTime updatedAt;
   final bool isSynced;
 
   NoteEntity({
@@ -20,6 +21,7 @@ class NoteEntity {
     required this.color,
     this.reminderDate,
     required this.createdAt,
+    required this.updatedAt,
     this.isSynced = false,
   });
 }

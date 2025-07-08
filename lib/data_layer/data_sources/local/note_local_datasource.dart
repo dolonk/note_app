@@ -39,6 +39,7 @@ class LocalNoteDataSourceImpl implements LocalNoteDataSource {
             color INTEGER,
             reminder_date TEXT,
             created_at TEXT,
+            updated_at TEXT,
             is_synced INTEGER DEFAULT 0
           )
         ''');

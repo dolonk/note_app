@@ -4,59 +4,39 @@ import 'package:flutter/material.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 
 class InternetManager {
-  InternetManager._internal();
+  static final instance = InternetManager._();
 
-  static final InternetManager _instance = InternetManager._internal();
-  static InternetManager get instance => _instance;
+  final _controller = StreamController<bool>.broadcast();
+  bool _isConnected = false;
 
-  final Connectivity _connectivity = Connectivity();
-  final StreamController<ConnectivityResult> _connectivityStreamController =
-      StreamController<ConnectivityResult>.broadcast();
+  InternetManager._() {
+    Connectivity().onConnectivityChanged.listen((result) async {
+      final isNowConnected = await _checkConnection();
+      if (isNowConnected != _isConnected) {
+        _isConnected = isNowConnected;
+        _controller.add(_isConnected);
+        debugPrint("📶 Internet status changed: $_isConnected");
+      }
+    });
 
-  /// Stream for listening to connectivity changes
-  Stream<ConnectivityResult> get connectivityStream => _connectivityStreamController.stream;
-
-  /// Initialize the network manager and set up a stream to continually check the connection status.
-  void initialize() {
-    _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
-      // Handle each result in the list
-      final result = results.first;
-      _connectivityStreamController.add(result);
+    // Initialize
+    _checkConnection().then((value) {
+      _isConnected = value;
+      _controller.add(_isConnected);
     });
   }
 
-  /// Check the internet connection status.
-  Future<bool> isConnected() async {
-    try {
-      // Check basic connectivity
-      final result = await _connectivity.checkConnectivity();
-      if (result == ConnectivityResult.none) {
-        return false;
-      }
+  Stream<bool> get isConnectedStream => _controller.stream;
 
-      // Verify actual internet access
-      final lookup = await InternetAddress.lookup('google.com');
-      if (lookup.isNotEmpty && lookup.first.rawAddress.isNotEmpty) {
-        return true; // Internet is accessible
-      } else {
-        return false; // No internet access
-      }
-    } catch (e) {
-      // If an exception occurs, assume no internet
+  Future<bool> isConnected() => _checkConnection();
+
+  Future<bool> _checkConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      return result.isNotEmpty && result[0].rawAddress.isNotEmpty;
+    } catch (_) {
       return false;
     }
-  }
-
-  ///auto-respond to online/offline
-  Stream<bool> get isConnectedStream async* {
-    await for (final result in connectivityStream) {
-      yield result != ConnectivityResult.none;
-    }
-  }
-
-  /// Dispose or close the active connectivity stream.
-  void dispose() {
-    _connectivityStreamController.close();
   }
 }
 

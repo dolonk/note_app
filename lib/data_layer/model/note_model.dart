@@ -11,6 +11,7 @@ class NoteModel extends NoteEntity {
     required super.color,
     super.reminderDate,
     required super.createdAt,
+    required super.updatedAt,
     super.isSynced = false,
   });
 
@@ -25,12 +26,14 @@ class NoteModel extends NoteEntity {
       color: json['color'] ?? 0,
       reminderDate: json['reminder_date'] != null ? DateTime.parse(json['reminder_date']) : null,
       createdAt: DateTime.parse(json['created_at']),
+      updatedAt: DateTime.parse(json['updated_at']),
       isSynced: json['is_synced'] == 1,
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'user_id': userId,
       'title': title,
       'content': content,
@@ -39,6 +42,7 @@ class NoteModel extends NoteEntity {
       'color': color,
       'reminder_date': reminderDate?.toIso8601String(),
       'created_at': createdAt.toIso8601String(),
+      'updated_at': updatedAt.toIso8601String(),
       'is_synced': isSynced ? 1 : 0,
     };
   }
@@ -53,6 +57,7 @@ class NoteModel extends NoteEntity {
     int? color,
     DateTime? reminderDate,
     DateTime? createdAt,
+    DateTime? updatedAt,
     bool? isSynced,
   }) {
     return NoteModel(
@@ -65,6 +70,7 @@ class NoteModel extends NoteEntity {
       color: color ?? this.color,
       reminderDate: reminderDate ?? this.reminderDate,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       isSynced: isSynced ?? this.isSynced,
     );
   }

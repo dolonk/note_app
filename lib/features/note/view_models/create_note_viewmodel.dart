@@ -1,5 +1,6 @@
 import 'package:uuid/uuid.dart';
 import 'package:flutter/material.dart';
+import '../../../data_layer/data_sources/remote/note_remote_datasource.dart';
 import '../provider/note_provider.dart';
 import '../../../utils/enum/note_enum.dart';
 import '../../../core/di/service_locator.dart';
@@ -53,9 +54,10 @@ class CreateNoteViewModel extends ChangeNotifier {
       content: content,
       tags: tags,
       priority: priority,
-      color: selectedColor.value,
+      color: selectedColor.toARGB32(),
       reminderDate: reminderDate,
-      createdAt: DateTime.now(),
+      createdAt: DateTime.now().toUtc(),
+      updatedAt: DateTime.now().toUtc(),
     );
 
     noteProvider.addNote(newNote).then((_) {

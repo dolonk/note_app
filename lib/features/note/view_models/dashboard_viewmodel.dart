@@ -7,10 +7,8 @@ class DashboardViewModel with ChangeNotifier {
   final NoteProvider _noteProvider = sl<NoteProvider>();
   final userId = Supabase.instance.client.auth.currentUser?.id ?? '';
 
-  NoteProvider get provider => _noteProvider;
-
   Future<void> fetchNotes() async {
-    await _noteProvider.fetchNotes(userId);
+    await _noteProvider.fetchAndMergeNotes(userId);
   }
 
   Future<void> deleteNote(String noteId) async {
