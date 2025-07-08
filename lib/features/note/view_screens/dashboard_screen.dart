@@ -1,3 +1,4 @@
+import 'crated_note_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../../utils/enum/note_enum.dart';
@@ -28,14 +29,20 @@ class DashboardScreen extends StatelessWidget {
               title: const Text('🗒️ My Notes'),
               actions: [IconButton(icon: const Icon(Icons.refresh), onPressed: () => vm.fetchNotes())],
             ),
-            body: _buildBody(state, notes, noteVm, vm),
+            body: _buildBody(context, state, notes, noteVm, vm),
           );
         },
       ),
     );
   }
 
-  Widget _buildBody(NoteFetchState state, List<NoteModel> notes, NoteProvider noteVm, DashboardViewModel vm) {
+  Widget _buildBody(
+    BuildContext context,
+    NoteFetchState state,
+    List<NoteModel> notes,
+    NoteProvider noteVm,
+    DashboardViewModel vm,
+  ) {
     switch (state) {
       case NoteFetchState.loading:
         return const Center(child: CircularProgressIndicator());
@@ -43,12 +50,25 @@ class DashboardScreen extends StatelessWidget {
       case NoteFetchState.success:
         return notes.isEmpty
             ? const Center(child: Text("No notes found."))
-            : ListView.builder(
-              itemCount: notes.length,
-              itemBuilder: (_, index) {
-                final note = notes[index];
-                return NoteCard(note: note, onDelete: () => vm.deleteNote(note.id!));
-              },
+            : RefreshIndicator(
+              onRefresh: () async => vm.fetchNotes(),
+              child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: notes.length,
+                itemBuilder: (_, index) {
+                  final note = notes[index];
+                  return NoteCard(
+                    note: note,
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => CreateNoteScreen(existingNote: note)),
+                      );
+                    },
+                    onDelete: () => vm.deleteNote(note.id!),
+                  );
+                },
+              ),
             );
 
       case NoteFetchState.error:

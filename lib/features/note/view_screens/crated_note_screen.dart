@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../../../data_layer/model/note_model.dart';
 import '../provider/note_provider.dart';
 import '../../../utils/enum/note_enum.dart';
 import '../view_models/create_note_viewmodel.dart';
 
 class CreateNoteScreen extends StatelessWidget {
-  const CreateNoteScreen({super.key});
+  final NoteModel? existingNote;
+  const CreateNoteScreen({super.key, this.existingNote});
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => CreateNoteViewModel(),
+      create: (_) => CreateNoteViewModel(existingNote),
       child: Consumer2<CreateNoteViewModel, NoteProvider>(
         builder: (context, vm, provider, _) {
           return Scaffold(
@@ -53,7 +55,9 @@ class CreateNoteScreen extends StatelessWidget {
                           onPressed: () => vm.pickDate(context),
                           icon: const Icon(Icons.calendar_month),
                           label: Text(
-                            vm.reminderDate == null ? "Pick Reminder Date" : vm.reminderDate.toString().split(' ')[0],
+                            vm.reminderDate == null
+                                ? "Pick Reminder Date"
+                                : vm.reminderDate.toString().split(' ')[0],
                           ),
                         ),
                       ),
@@ -97,9 +101,15 @@ class CreateNoteScreen extends StatelessWidget {
                   const SizedBox(height: 24),
                   ElevatedButton.icon(
                     onPressed:
-                        provider.operationState == NoteOperationState.creating ? null : () => vm.submitNote(context),
+                        provider.operationState == NoteOperationState.creating
+                            ? null
+                            : () => vm.submitNote(context),
                     icon: const Icon(Icons.check),
-                    label: Text(provider.operationState == NoteOperationState.creating ? "Saving..." : "Save Note"),
+                    label: Text(
+                      provider.operationState == NoteOperationState.creating
+                          ? "Saving..."
+                          : (vm.existingNote != null ? "Update Note" : "Save Note"),
+                    ),
                     style: ElevatedButton.styleFrom(minimumSize: const Size.fromHeight(50)),
                   ),
                 ],
