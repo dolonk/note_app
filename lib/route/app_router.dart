@@ -6,11 +6,11 @@ import '../features/auth/view_screens/login_screen.dart';
 import '../features/auth/view_screens/signup_screen.dart';
 import '../features/note/view_screens/crated_note_screen.dart';
 import '../features/note/view_screens/dashboard_screen.dart';
+import '../features/profile/view_screens/profile_screen.dart';
 import '../utils/global_context.dart';
 import 'app_route_names.dart';
 import 'package:go_router/go_router.dart';
 import 'package:note_app/features/bottom_nav_bar.dart';
-import 'package:note_app/features/profile/view/profile_screen.dart';
 
 final AuthUseCase _authUseCase = sl<AuthUseCase>();
 

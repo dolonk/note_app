@@ -49,40 +49,6 @@ class CreateNoteViewModel extends ChangeNotifier {
     }
   }
 
-  /*void submitNote(BuildContext context) {
-    final title = titleController.text.trim();
-    final content = contentController.text.trim();
-    final tags = tagController.text.trim();
-
-    if (title.isEmpty || content.isEmpty) {
-      DSnackBar.warning(title: 'Title and Content are required');
-      return;
-    }
-
-    final newNote = NoteModel(
-      id: const Uuid().v4(),
-      userId: Supabase.instance.client.auth.currentUser?.id,
-      title: title,
-      content: content,
-      tags: tags,
-      priority: priority,
-      color: selectedColor.toARGB32(),
-      reminderDate: reminderDate,
-      createdAt: DateTime.now().toUtc(),
-      updatedAt: DateTime.now().toUtc(),
-    );
-
-    noteProvider.addNote(newNote).then((_) {
-      if (!context.mounted) return;
-      if (noteProvider.operationState == NoteOperationState.success) {
-        DSnackBar.success(title: "✅ Note created!");
-        _reset();
-      } else if (noteProvider.operationState == NoteOperationState.error) {
-        DSnackBar.error(title: noteProvider.error ?? "❌ Failed to create note.");
-      }
-    });
-  }*/
-
   void submitNote(BuildContext context) {
     final title = titleController.text.trim();
     final content = contentController.text.trim();

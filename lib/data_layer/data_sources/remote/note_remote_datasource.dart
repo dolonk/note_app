@@ -21,14 +21,12 @@ class RemoteNoteDataSource {
   }
 
   Future<List<NoteModel>> getAllNotes(String userId) async {
-    final response = await client.from('notes').select().eq('user_id', userId).order('created_at', ascending: false);
+    final response = await client
+        .from('notes')
+        .select()
+        .eq('user_id', userId)
+        .order('created_at', ascending: false);
 
     return (response as List).map((e) => NoteModel.fromJson(e)).toList();
-  }
-
-  Future<NoteModel?> getNoteById(String noteId) async {
-    final response = await client.from('notes').select().eq('id', noteId).maybeSingle();
-    if (response == null) return null;
-    return NoteModel.fromJson(response);
   }
 }

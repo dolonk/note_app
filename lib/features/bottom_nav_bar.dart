@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'note/view_screens/dashboard_screen.dart';
 import 'note/view_screens/crated_note_screen.dart';
-import 'package:note_app/features/profile/view/profile_screen.dart';
+import 'package:note_app/features/profile/view_screens/profile_screen.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});

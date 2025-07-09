@@ -7,7 +7,6 @@ abstract class LocalNoteDataSource {
   Future<void> insertNote(NoteModel note);
   Future<void> updateNote(NoteModel note);
   Future<List<NoteModel>> getAllNotes();
-  Future<NoteModel?> getNoteById(String noteId);
   Future<void> deleteNote(String id);
 }
 
@@ -65,18 +64,6 @@ class LocalNoteDataSourceImpl implements LocalNoteDataSource {
     final List<Map<String, dynamic>> maps = await db.query('notes', orderBy: 'created_at DESC');
 
     return maps.map((json) => NoteModel.fromJson(json)).toList();
-  }
-
-  @override
-  Future<NoteModel?> getNoteById(String noteId) async {
-    final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query('notes', where: 'id = ?', whereArgs: [noteId], limit: 1);
-
-    if (maps.isNotEmpty) {
-      return NoteModel.fromJson(maps.first);
-    } else {
-      return null;
-    }
   }
 
   @override

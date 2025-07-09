@@ -23,6 +23,14 @@ class AuthRemoteData {
     return client.auth.signInWithPassword(email: email, password: password);
   }
 
+  Future<UserModel?> fetchUserProfile(String userId) async {
+    final response = await client.from('user_profiles').select().eq('id', userId).maybeSingle();
+    print("Response: $response");
+
+    if (response == null) return null;
+    return UserModel.fromMap(response);
+  }
+
   Future<void> logout() => client.auth.signOut();
 
   UserModel? get currentUser {

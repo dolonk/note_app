@@ -74,6 +74,20 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
+  Future<UserModel> getUserProfile(String userId) async {
+    try {
+      final profile = await _authUseCase.getProfile(userId);
+      if (profile == null) {
+        throw Exception("User profile not found");
+      }
+      return profile;
+    } catch (e, stack) {
+      debugPrint("❌ getUserProfile error: $e\n$stack");
+      _errorMessage = e.toString();
+      rethrow;
+    }
+  }
+
   Future<void> logout() async {
     try {
       await _authUseCase.logout();

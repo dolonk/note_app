@@ -18,8 +18,4 @@ class DashboardViewModel with ChangeNotifier {
   void initSync() {
     _noteProvider.initializeAutoSync(userId);
   }
-
-  void disposeResources() {
-    _noteProvider.dispose();
-  }
 }

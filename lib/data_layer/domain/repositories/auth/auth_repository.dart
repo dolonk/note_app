@@ -13,6 +13,8 @@ abstract class AuthRepository {
 
   Future<bool> isUserAlreadyLoggedIn();
 
+  Future<UserModel?> getProfile(String userId);
+
   Future<void> logout();
 
   UserModel? getCurrentUser();

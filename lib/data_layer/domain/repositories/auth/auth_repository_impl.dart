@@ -106,6 +106,16 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
+  Future<UserModel?> getProfile(String userId) async {
+    try {
+      return await remoteData.fetchUserProfile(userId);
+    } catch (e) {
+      SupabaseExceptionHandler.parse(e);
+      return null;
+    }
+  }
+
+  @override
   Future<void> logout() async {
     try {
       await remoteData.logout();

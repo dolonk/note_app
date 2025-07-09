@@ -12,7 +12,5 @@ class LocalNoteUseCase {
 
   Future<List<NoteModel>> getAllNotes(String userId) => localRepository.getAllNotes();
 
-  Future<NoteModel?> getNoteById(String noteId) => localRepository.getNoteById(noteId);
-
   Future<void> deleteNote(String noteId) => localRepository.deleteNote(noteId);
 }

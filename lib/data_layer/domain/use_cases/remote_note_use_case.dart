@@ -12,7 +12,5 @@ class RemoteNoteUseCase {
 
   Future<List<NoteModel>> getAllNotes(String userId) => repository.getAllNotes(userId);
 
-  Future<NoteModel?> getNoteById(String noteId) => repository.getNoteById(noteId);
-
   Future<void> deleteNote(String noteId) => repository.deleteNote(noteId);
 }

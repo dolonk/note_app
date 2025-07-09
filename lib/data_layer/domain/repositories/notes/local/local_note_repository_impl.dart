@@ -23,11 +23,6 @@ class LocalNoteRepositoryImpl implements LocalNoteRepository {
   }
 
   @override
-  Future<NoteModel?> getNoteById(String noteId) {
-    return localDataSource.getNoteById(noteId);
-  }
-
-  @override
   Future<void> deleteNote(String id) async {
     await localDataSource.deleteNote(id);
   }

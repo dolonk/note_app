@@ -43,17 +43,6 @@ class RemoteNoteRepositoryImpl implements RemoteNoteRepository {
   }
 
   @override
-  Future<NoteModel?> getNoteById(String noteId) async {
-    try {
-      return await remote.getNoteById(noteId);
-    } catch (e) {
-      final error = SupabaseExceptionHandler.parse(e);
-      debugPrint("🔍 Get Note By ID Error: $error");
-      throw Exception(error);
-    }
-  }
-
-  @override
   Future<void> deleteNote(String noteId) async {
     try {
       await remote.deleteNote(noteId);
