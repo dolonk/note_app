@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../model/user_model.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -11,11 +13,42 @@ class AuthRemoteData {
   }
 
   Future<void> saveUserProfile(UserModel user) async {
-    await client.from('user_profiles').insert({
+    final bucket = 'note';
+    String? avatarUrl = user.avatar;
+
+    // 🧠 If avatar is a local file path (not a URL), upload it
+    if (avatarUrl != null && !avatarUrl.startsWith('http')) {
+      final file = File(avatarUrl);
+      if (await file.exists()) {
+        final ext = file.path.split('.').last;
+        final filePath =
+            'profiles/${client.auth.currentUser?.id}/note_${DateTime.now().millisecondsSinceEpoch}.$ext';
+
+        try {
+          await Supabase.instance.client.storage
+              .from(bucket)
+              .uploadBinary(
+                filePath,
+                await file.readAsBytes(),
+                fileOptions: const FileOptions(cacheControl: '3600', upsert: true),
+              );
+
+          avatarUrl = await Supabase.instance.client.storage
+              .from(bucket)
+              .createSignedUrl(filePath, 60 * 60); // 1 hour signed link
+        } catch (e) {
+          print("❌ Avatar upload failed: $e");
+        }
+      }
+    }
+
+    await client.from('user_profiles').upsert({
       'id': user.id,
       'name': user.name,
       'email': user.email,
-      'created_at': DateTime.now().toUtc().toIso8601String(),
+      'bio': user.bio,
+      'avatar': avatarUrl,
+      'created_at': user.createdAt?.toUtc().toIso8601String(),
     });
   }
 
@@ -25,7 +58,6 @@ class AuthRemoteData {
 
   Future<UserModel?> fetchUserProfile(String userId) async {
     final response = await client.from('user_profiles').select().eq('id', userId).maybeSingle();
-    print("Response: $response");
 
     if (response == null) return null;
     return UserModel.fromMap(response);

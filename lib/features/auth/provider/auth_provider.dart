@@ -74,9 +74,9 @@ class AuthProvider with ChangeNotifier {
     }
   }
 
-  Future<UserModel> getUserProfile(String userId) async {
+  Future<UserModel> fetchUserProfile(String userId) async {
     try {
-      final profile = await _authUseCase.getProfile(userId);
+      final profile = await _authUseCase.fetchUserProfile(userId);
       if (profile == null) {
         throw Exception("User profile not found");
       }

@@ -22,8 +22,8 @@ class AuthUseCase {
 
   Future<bool> isUserAlreadyLoggedIn() => repository.isUserAlreadyLoggedIn();
 
-  Future<UserModel?> getProfile(String userId) {
-    return repository.getProfile(userId);
+  Future<UserModel?> fetchUserProfile(String userId) {
+    return repository.fetchUserProfile(userId);
   }
 
   Future<void> logout() {
